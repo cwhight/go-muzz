@@ -16,7 +16,7 @@ This app was created as a tech test, in the interest of time some things have be
 - No testing is done on any part of the application
 - Passwords are not encrypted etc. (they're not even stored) and just compared as plain text
 - authentication is done using an `access-token` cookie, rather than using an `Authorization` header, not necessarily a limitation just clarification of the feature
-- filtering results not implemented
+- filtering results not implemented (handler logic does filter out previously swiped profiles, logic doesn't exist at DB layer to check for them correctly)
 
 ## Endpoints
 
