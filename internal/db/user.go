@@ -14,6 +14,7 @@ func NewUserDb() UserDb {
 }
 
 func (d *UserDb) CreateUser() (model.User, error) {
+	// should randomly gen different values
 	return model.User{
 		Profile: model.Profile {
 			Name: "test",
@@ -28,6 +29,8 @@ func (d *UserDb) CreateUser() (model.User, error) {
 }
 
 func (d *UserDb) GetProfileMatches(userId uuid.UUID) ([]model.Profile, error) {
+	// should search all other users in DB, filtering based on criteria such as age, gender location etc.
+	// not implemented for sake of time
 	return []model.Profile{
 		model.Profile {
 			Name: "test",
@@ -45,6 +48,7 @@ func (d *UserDb) GetProfileMatches(userId uuid.UUID) ([]model.Profile, error) {
 }
 
 func (d *UserDb) GetUser(email string) (*model.User, error) {
+	// should return user from DB with given email
 	return &model.User{
 		Profile: model.Profile {
 			Name: "test",
