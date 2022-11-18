@@ -8,6 +8,16 @@
 
 Application will start at `http://localhost:3000/`
 
+## Limitations
+
+This app was created as a tech test, in the interest of time some things have been left as essentially dummy code, to enable producing most of the solution in a shorter space of time, documenting the main limitations here:
+
+- Only Handler layer logic has been implemented properly, the DB layer simply responds with dummy code as opposed to actually querying the DB and returning a real response. The method signatures themselves would remain unchanged and the DB layer could and would be implemented independently
+- No testing is done on any part of the application
+- Passwords are not encrypted etc. (they're not even stored) and just compared as plain text
+- authentication is done using an `access-token` cookie, rather than using an `Authorization` header, not necessarily a limitation just clarification of the feature
+- filtering results not implemented
+
 ## Endpoints
 
 ```
