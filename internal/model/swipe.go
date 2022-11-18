@@ -5,7 +5,7 @@ import 	(
 	_ "github.com/go-playground/validator"
 )
 
-type SwipeRequest struct {
+type Swipe struct {
 	UserId uuid.UUID `json:"userId" validate:"required"`
 	ProfileId uuid.UUID `json:"profileId" validate:"required"`
 	Preference string `json:"preference" validate:"required"`

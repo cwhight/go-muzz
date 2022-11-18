@@ -3,36 +3,51 @@ package handler
 import (
 	"net/http"
 	"encoding/json"
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/cwhight/go-muzz/internal/db"
+	"github.com/cwhight/go-muzz/internal/auth"
+
+	"github.com/cwhight/go-muzz/internal/model"
 )
 
 type ProfileHandler struct {
 	userDb db.UserDb
+	matchDb db.MatchDb
 }
 
-func  NewProfileHandler(userDb db.UserDb) ProfileHandler {
-	return ProfileHandler{userDb: userDb}
+func  NewProfileHandler(userDb db.UserDb, matchDb db.MatchDb) ProfileHandler {
+	return ProfileHandler{userDb: userDb, matchDb: matchDb}
 }
 
 func (h *ProfileHandler) GetProfiles(c echo.Context) error {
-	userId := c.QueryParam("userId")
-	if userId == "" {
-		return echo.NewHTTPError(http.StatusBadRequest, "user id must be provided")
+	cookie, err := c.Cookie("access-token")
+	if err != nil {
+		return echo.NewHTTPError(http.StatusUnauthorized, "unauthorised access")
 	}
 
-	idAsUuid, err := uuid.Parse(userId)
+	user, err := auth.ParseCookie(cookie.Value)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "user id must be valid uuid")
+		return echo.NewHTTPError(http.StatusUnauthorized, "unauthorised access")
 	}
 	
-	profiles, err :=  h.userDb.GetProfileMatches(idAsUuid)
+	profiles, err :=  h.userDb.GetProfileMatches(user.Id)
 	if err != nil {
 		return echo.NewHTTPError(500, "an internal error occurred")
 	}
 
+	swipes, err := h.matchDb.GetSwipes(user.Id)
+	if err != nil {
+		return echo.NewHTTPError(500, "an internal error occurred")
+	}
+
+	filteredProfiles := []model.Profile{}
+	for _, profile := range profiles {
+		if !swipes[profile.Id] {
+			filteredProfiles = append(filteredProfiles, profile)
+		}
+	}
+
 	c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSONCharsetUTF8)
 	c.Response().WriteHeader(http.StatusCreated)
-	return json.NewEncoder(c.Response()).Encode(profiles)
+	return json.NewEncoder(c.Response()).Encode(filteredProfiles)
 }

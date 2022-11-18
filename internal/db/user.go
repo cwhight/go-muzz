@@ -43,3 +43,16 @@ func (d *UserDb) GetProfileMatches(userId uuid.UUID) ([]model.Profile, error) {
 		},
 	}, nil
 }
+
+func (d *UserDb) GetUser(email string) (*model.User, error) {
+	return &model.User{
+		Profile: model.Profile {
+			Name: "test",
+			Id: uuid.New(),
+			Age: 29,
+			Gender: "male",
+		},
+		Password: "password",
+		Email: "email@test.com",
+	}, nil
+}
