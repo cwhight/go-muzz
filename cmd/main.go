@@ -36,5 +36,4 @@ func main() {
 	e.POST("/login", loginHandler.Login)
 
 	e.Logger.Fatal(e.Start(":3000"))
-	fmt.Println("hello")
 }
